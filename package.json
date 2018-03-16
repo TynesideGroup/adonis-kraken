@@ -1,7 +1,7 @@
 {
   "name": "adonis-kraken",
   "version": "0.0.2",
-  "description": "Simplifies working with Kraken.io (image optimisatiopn service) through Adonis",
+  "description": "Simplifies working with Kraken.io (image optimisation service) through Adonis",
   "main": "index.js",
   "repository": {
     "type": "git",
