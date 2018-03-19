@@ -15,15 +15,14 @@
     "Optimisation"
   ],
   "author": "Liam Potter",
-  "license": "MIT",
+  "license": "WTFPL",
   "bugs": {
     "url": "https://github.com/liam-potter/adonis-kraken/issues"
   },
   "homepage": "https://github.com/liam-potter/adonis-kraken#readme",
   "devDependencies": {
     "@adonisjs/ace": "^5.0.0",
-    "@adonisjs/fold": "^4.0.5",
-    "@adonisjs/sink": "^1.0.13"
+    "@adonisjs/fold": "^4.0.5"
   },
   "dependencies": {
     "axios": "^0.18.0",
