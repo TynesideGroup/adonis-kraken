@@ -3,6 +3,7 @@
 const fs = require("fs")
 const stream = require("stream")
 const request = require("request")
+const FormData = require('form-data')
 
 const defaultConfig = require('../../config/kraken.js')
 
@@ -17,6 +18,8 @@ class Kraken {
     }
 
     this.api_url = this.options.base_api_url || 'https://api.kraken.io/v1'
+
+    this.form = new FormData()
   }
 
   /**
