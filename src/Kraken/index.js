@@ -62,7 +62,7 @@ class Kraken {
     )
     delete opts.file
     form.append('data', JSON.stringify(opts))
-    axios.post('https://api.kraken.io/v1/upload', form, { headers: form.getHeaders() })
+    return axios.post('https://api.kraken.io/v1/upload', form, { headers: form.getHeaders() })
       .then((response) => response)
       .catch((error) => {
         console.log(error)
