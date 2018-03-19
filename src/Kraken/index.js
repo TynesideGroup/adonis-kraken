@@ -4,12 +4,12 @@ const fs = require("fs")
 const stream = require("stream")
 const request = require("request")
 
-const defaultConfig = require('../../config/kraken.js')
+const Config = use('Config')
 
 class Kraken {
 
-  constructor (Config) {
-    this.options = Config.merge('kraken', defaultConfig)
+  constructor (inputConfig) {
+    this.options = inputConfig.merge('kraken', Config.get('kraken'))
 
     this.auth = {
       api_key: this.options.api_key || '',
@@ -59,8 +59,6 @@ class Kraken {
    */
   upload (opts = {}, cb) {
     opts.auth = this.auth
-
-    console.log(opts.file)
 
     let formData = {}
 
