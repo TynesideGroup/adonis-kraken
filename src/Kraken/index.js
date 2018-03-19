@@ -62,7 +62,7 @@ class Kraken {
 
     let form = new FormData()
 
-    form.append('file', (opts.file && opts.file instanceof stream.Streamfile)
+    form.append('file', (opts.file && opts.file instanceof stream.Stream)
       ? opts.file
       : fs.createReadStream(opts.file)
     )
