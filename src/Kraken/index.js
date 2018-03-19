@@ -11,10 +11,48 @@ class Kraken {
 
   constructor (inputConfig) {
     this.options = inputConfig.merge('kraken', Config.get('kraken'))
-    this.auth = {
-      api_key: this.options.api_key || '',
-      api_secret: this.options.api_secret || ''
+  }
+
+  /**
+   * Attaches authentication data to request body
+   *
+   * @param {Object} body
+   */
+  _attachAuth (body = {}) {
+    body = {
+      auth: {
+        api_key: this.options.api_key || '',
+        api_secret: this.options.api_secret || ''
+      },
+      ...body
     }
+  }
+
+  /**
+   * Gets an streamable instance of a file
+   *
+   * @param {*} file
+   */
+  _getStreamedFile (file) {
+    return (file && file instanceof stream.Stream) ? file : fs.createReadStream(file)
+  }
+
+  /**
+   * Gets the filename from a streamed file
+   *
+   * @param {Stream} file
+   */
+  _getFileName (file) {
+    return file.filename || 'file'
+  }
+
+  /**
+   * Gets the auto-generated headers from a form
+   *
+   * @param {FormData} form
+   */
+  _getFormHeaders (form) {
+    return { headers: form.getHeaders() }
   }
 
   /**
@@ -39,9 +77,7 @@ class Kraken {
    */
   async url (body = {}) {
     try {
-      body.auth = this.auth
-      const { data } = await axios.post('https://api.kraken.io/v1/url', body)
-      return data
+      return axios.post('https://api.kraken.io/v1/url', this._attachAuth(body))
     } catch (error) {
       console.log(error)
       return error
@@ -51,23 +87,19 @@ class Kraken {
   /**
    * Optimise image from direct upload
    *
-   * @param {Object} opts
+   * @param {Object} body
    */
-  async upload (opts = {}) {
-    opts.auth = this.auth
-    let form = new FormData()
-    form.append('file', (opts.file && opts.file instanceof stream.Stream)
-      ? opts.file
-      : fs.createReadStream(opts.file)
-    )
-    delete opts.file
-    form.append('data', JSON.stringify(opts))
-    return axios.post('https://api.kraken.io/v1/upload', form, { headers: form.getHeaders() })
-      .then((response) => response)
-      .catch((error) => {
-        console.log(error)
-        return error
-      })
+  async upload (body = {}) {
+    try {
+      let form = new FormData()
+      form.append('file', this._getStreamedFile(body.file), this._getFileName(this._getStreamedFile(body.file)))
+      delete body.file
+      form.append('data', JSON.stringify(this._attachAuth(body)))
+      return axios.post('https://api.kraken.io/v1/upload', form, this._getFormHeaders(form))
+    } catch (error) {
+      console.log(error)
+      return error
+    }
   }
 
   /**
