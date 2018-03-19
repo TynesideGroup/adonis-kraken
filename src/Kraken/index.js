@@ -2,7 +2,8 @@
 
 const fs = require("fs")
 const stream = require("stream")
-const request = require("request")
+const axios = require("axios")
+const FormData = require('form-data')
 
 const Config = use('Config')
 
@@ -55,27 +56,27 @@ class Kraken {
    * Upload the given file along with credentials to Kraken API via HTTPS POST
    *
    * @param {Object} opts
-   * @param {Function} cb
    */
-  upload (opts = {}, cb) {
+  async upload (opts = {}) {
     opts.auth = this.auth
 
-    let formData = {}
+    let form = new FormData()
 
-    formData.file = (opts.file && opts.file instanceof stream.Stream)
+    form.append('file', (opts.file && opts.file instanceof stream.Streamfile)
       ? opts.file
       : fs.createReadStream(opts.file)
+    )
 
     delete opts.file
 
-    formData.data = JSON.stringify(opts)
+    form.append('data', JSON.stringify(opts))
 
-    request.post({
-      url: `${this.api_url}/upload`,
-      json: true,
-      strictSSL: false,
-      formData,
-    }, this._createResponseHandler(cb))
+    axios.post(`${this.api_url}/upload`, form, { headers: form.getHeaders() })
+      .then((response) => response)
+      .catch((error) => {
+        console.log(error)
+        return error
+      })
   }
 
 }
