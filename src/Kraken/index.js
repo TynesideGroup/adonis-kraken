@@ -19,7 +19,7 @@ class Kraken {
    * @param {Object} body
    */
   _attachAuth (body = {}) {
-    body = {
+    return body = {
       auth: {
         api_key: this.options.api_key || '',
         api_secret: this.options.api_secret || ''
@@ -105,15 +105,9 @@ class Kraken {
   /**
    * Get status for authenticated user (quota used/remaining etc)
    */
-  async userStatus (body = {}, formatSizes = true) {
+  async userStatus (formatSizes = false) {
     try {
-      body.auth = this.auth
-      let { data } = await axios.post('https://api.kraken.io/user_status', {
-        auth: {
-          api_key: this.auth.api_key,
-          api_secret: this.auth.api_secret
-        }
-      })
+      let { data } = await axios.post('https://api.kraken.io/user_status', this._attachAuth())
       if (formatSizes) {
         data.quota_total = this._formatBytes({ bytes: data.quota_total })
         data.quota_used = this._formatBytes({ bytes: data.quota_used })
