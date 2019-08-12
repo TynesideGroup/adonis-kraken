@@ -2,8 +2,6 @@
 
 Service provider for working with [Kraken.io](https://www.kraken.io) (image optimisation service)
 
-:exclamation: **WARNING! This package is heavily in development and is therefore unstable. It may not work correctly or at all. When it is working the way that it needs to I will bump it up to 0.1.0!**
-
 ## Installation
 * Run `adonis install adonis-kraken` within your Adonis project
 * Add `'adonis-kraken/providers/KrakenProvider'` to the `providers` array within `start/app.js`
@@ -13,7 +11,7 @@ There are two ways to configure this package, both of which require a `config/kr
 ```bash
 adonis kraken:getconfig
 ```
-By default this configuration file is set up to read `KRAKEN_API_KEY` and `KRAKEN_API_SECRET` variables from your `.env` file so that they remain secret (as this file should **not** be included in your code repository!) however you are free to override this behaviour by modifying the `config/kraken.js` file and setting the `api_key` and `api_secret` properties there.
+By default this configuration file is set up to read `KRAKEN_API_KEY` and `KRAKEN_API_SECRET` variables from your `.env` file so that they remain secret (as this file should **not** be included in your code repository!) however you are free to override this behaviour by modifying the `config/kraken.js` file and setting the `apiKey` and `apiSecret` properties there.
 
 > **WARNING** - It is dangerous to leave your API credentials directly in `config/kraken.js` in a public code repository as anyone will be able to read/use them - do so at your own risk!
 
@@ -35,8 +33,6 @@ See below for examples on how each method would be used.
 const Kraken = use('Kraken')
 
 class MyController {
-
-
   /**
    * Optimize an image via a URL
    */
@@ -49,12 +45,10 @@ class MyController {
     return { status: 'success' }
   }
 
-
   /**
    * Optimize an image via a file upload
    */
   async optimizeImageViaUpload ({ request }) {
-
     // Get access to the uploaded file. We are using a method
     // which means we do not need to save the file to our local
     // filesystem first!
@@ -74,7 +68,6 @@ class MyController {
     return { status: 'success' }
   }
 
-
   /**
    * Get some quota stats based on the active API key/secret
    */
@@ -82,8 +75,6 @@ class MyController {
     const { data } = await Kraken.userStatus({ formatSizes: true })
     return data
   }
-
-
 }
 
 module.exports = MyController
